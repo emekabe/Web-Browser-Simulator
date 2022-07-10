@@ -1,36 +1,55 @@
+import java.util.ArrayList;
 import java.util.List;
+import java.util.Stack;
 
 public class WebBrowserTabImpl implements WebBrowserTab{
 
-    // TODO: Create two stacks to keep track of the web navigation
-    // TODO: Create variable (String) for current page
-    // TODO: Create array list for history (static)
+    private Stack<String> backStack;
+    private Stack<String> forwardStack;
 
     private String currentPage;
 
+    private static final String TAB_HOME_PAGE_IDENTIFIER = "New Tab";
+
+    private static final List<String> history = new ArrayList<>();
+
     public WebBrowserTabImpl() {
-        // TODO: Initialize stack objects and page variable here
+        backStack = new Stack<>();
+        forwardStack = new Stack<>();
+        currentPage = TAB_HOME_PAGE_IDENTIFIER;
     }
 
     @Override
     public void visitPage(String page) {
-        // TODO: Implement this
+        backStack.add(currentPage);
+        currentPage = page;
+        history.add(page);
+        forwardStack.clear();
     }
 
     @Override
     public String viewCurrentPage() {
-        // TODO: Implement this
-        return null;
+        return currentPage;
     }
 
     @Override
     public void goBack() {
-        // TODO: Implement this
+        if (!backStack.isEmpty()){
+            forwardStack.add(currentPage);
+            currentPage = backStack.pop();
+        } else {
+            System.out.println("Can't go backward");
+        }
     }
 
     @Override
     public void goForward() {
-        // TODO: Implement this
+        if (!forwardStack.empty()){
+            backStack.add(currentPage);
+            currentPage = forwardStack.pop();
+        } else {
+            System.out.println("Can't go forward");
+        }
     }
 
     @Override
@@ -40,12 +59,11 @@ public class WebBrowserTabImpl implements WebBrowserTab{
 
     @Override
     public List<String> viewHistory() {
-        // TODO: Implement this
-        return null;
+        return history;
     }
 
     @Override
     public void clearHistory() {
-        // TODO: Implement this
+        history.clear();
     }
 }
